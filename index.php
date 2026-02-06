@@ -1,359 +1,296 @@
 <?php
-session_start();
-include 'koneksi/koneksi.php';
-
-$error    = '';
-$username = '';
-$role_in  = ''; // 🔹 supaya nggak undefined waktu pertama kali load halaman
-
-// Jika form disubmit
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['role'], $_POST['username'], $_POST['password'])) {
-    // Normalisasi input
-    $role_in  = strtolower(trim($_POST['role']));
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
-
-    // Ambil data dari tabel pengguna
-    // 🔹 sekarang sekalian ambil id_outlet (kalau dipakai kasir)
-    // struktur: id, nama, username, password, role, id_outlet
-    $sql  = "SELECT id, nama, username, password, role, id_outlet
-             FROM pengguna
-             WHERE username = ? AND role = ? 
-             LIMIT 1";
-    $stmt = mysqli_prepare($conn, $sql);
-
-    if ($stmt === false) {
-        // Kalau prepare gagal
-        $error = 'Terjadi kesalahan pada server (prepare gagal).';
-    } else {
-        mysqli_stmt_bind_param($stmt, "ss", $username, $role_in);
-        mysqli_stmt_execute($stmt);
-        $res = mysqli_stmt_get_result($stmt);
-
-        if ($res && $u = mysqli_fetch_assoc($res)) {
-
-            // VERSI SAAT INI: password masih plain TEXT
-            $password_match = ($password === $u['password']);
-
-            // 🔹 Jika nanti sudah pakai password_hash:
-            // $password_match = password_verify($password, $u['password']);
-
-            if ($password_match) {
-                // Set sesi umum
-                $_SESSION['login']    = true;
-                $_SESSION['role']     = $u['role'];        // dari DB
-                $_SESSION['id_user']  = (int)$u['id'];
-                $_SESSION['nama']     = $u['nama'];
-                $_SESSION['username'] = $u['username'];
-
-                // 🔹 simpan id_outlet kalau ada (untuk kasir/outlet)
-                $_SESSION['id_outlet'] = isset($u['id_outlet']) ? (int)$u['id_outlet'] : null;
-
-                // Redirect sesuai role
-                if ($role_in === 'owner') {
-                    header("Location: owner/konfirmasi_restok/konfirmasi_restok.php");
-                    exit;
-                } elseif ($role_in === 'admin') {
-                    header("Location: admin/pengguna/pengguna.php");
-                    exit;
-                } elseif ($role_in === 'gudang') {
-                    header("Location: gudang/stok_barang/stok_barang.php");
-                    exit;
-                } elseif ($role_in === 'kasir') {
-                    // 🔹 kalau nanti mau diarahkan ke stok outlet atau pengajuan restok:
-                    // header("Location: kasir/stok_outlet/kasir_stok_outlet.php");
-                    header("Location: kasir/stok_barang/stok_barang.php");
-                    exit;
-                } else {
-                    $error = 'Role tidak dikenali dalam sistem.';
-                }
-
-            } else {
-                $error = 'Username atau password salah!';
-            }
-        } else {
-            $error = 'Username, password, atau role salah!';
-        }
-
-        mysqli_stmt_close($stmt);
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem Pakar - Halaman Utama</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: Inter, system-ui, Arial;
-    }
-
-    body {
-      margin: 0;
-      background-size: cover;
-      font-family: Arial, sans-serif;
-    }
-
-    .wadah {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .kartu {
-      background: #ffffff;
-      width: 400px;
-      padding: 24px;
-      margin: 20px;
-      border-radius: 14px;
-      color: #000000;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-    }
-
-    .gambar {
-      width: 50%;
-      max-width: 250px;
-      height: auto;
-      display: block;
-      margin: 0 auto 20px;
-      object-fit: contain;
-    }
-
-    .formulir-masuk label {
-      display: block;
-      font-size: 13px;
-      margin-top: 6px;
-    }
-
-    .formulir-masuk input {
-      width: 100%;
-      outline: none;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid black;
-      margin-top: 6px;
-    }
-
-    .input-sandi {
-      position: relative;
-    }
-
-    .input-sandi input {
-      padding-right: 40px;
-    }
-
-    .tombol-lihat-sandi {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      font-size: 18px;
-      color: #333;
-      opacity: 0.8;
-    }
-
-    .pilihan-peran {
-      margin-top: 10px;
-      font-size: 14px;
-    }
-
-    .kelompok-radio {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .kelompok-radio label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    .kelompok-radio input[type="radio"] {
-      accent-color: #4c6ef5;
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-    }
-
-    .tombol-masuk {
-      width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
-      margin-top: 14px;
-      background: #fff;
-      color: blue;
-      font-weight: 700;
-      cursor: pointer;
-      border: 1px solid black;
-    }
-
-    .lupa-sandi {
-      font-size: 14px;
-      text-align: right;
-      margin-top: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      display: block;
-    }
-
-    .lapisan-modal {
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background:#fff; overflow-x:hidden; }
+    .menu-atas{
       position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      display: none;
+      top:0; left:0; right:0;
+      height:70px;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 16px;
+      z-index:250;
+      box-shadow:0 2px 8px rgba(0,0,0,.25);
+    }
+
+    .kiri-menu-atas{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 140px;
+    }
+
+    .logo-navbar{
+      width:50px;
+      height:50px;
+      object-fit:cover;
+    }
+
+    .tengah-menu-atas{
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      text-align:center;
+      max-width: 820px;
+      padding: 0 10px;
+    }
+
+    .teks-selamat{
+      font-size:20px;
+      font-weight:bold;
+      color:#333;
+      line-height:1.2;
+    }
+
+ 
+    .kanan-menu-atas{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 140px;
+      justify-content: flex-end;
+    }
+
+    .btn-login-icon{
+      width:46px;
+      height:46px;
+      border-radius:50%;
+      border:1px solid #00AEEF;
+      background:#fff;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      transition:.2s ease;
+      text-decoration:none;
+      color:#333;
+    }
+    .btn-login-icon:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0,0,0,.12);
+    }
+    .btn-login-icon i{
+      font-size:20px;
+    }
+
+    /* ===== KONTEN UTAMA ===== */
+    .pembungkus{
+      padding-top: 90px; 
+      display:flex;
+      justify-content:center;
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+
+    .bagian_utama{
+      width: min(1100px, 100%);
+      margin-top: 10px;
+      border:1px solid #d9d9d9;
+      border-radius: 10px;
+      overflow:hidden;
+      background:#fff;
+    }
+
+    .isi_utama{
+      display:grid;
+      grid-template-columns: 1fr 1fr; 
+      gap: 24px;
+      padding: 26px;
+      background:#b3ebf2;
+      min-height: 600px;
+    }
+
+    .kiri_utama h1{
+      font-size: 22px;
+      color:#111;
+      margin-bottom: 20px;
+      margin-top:80px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .kiri_utama p{
+      color: #1f2937;      
+      font-size: 16.5px;     
+      line-height: 1.5;      
+      max-width: 560px;     
+      margin-bottom: 50px;  
+    }
+
+    .btn-mulai{
+      display:inline-block;
+      padding: 10px 16px;
+      background:#fff;
+      color:#111;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,.2);
+      text-decoration:none;
+      font-weight: 800;
+      transition:.2s ease;
+    }
+    .btn-mulai:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(0,0,0,.15);
+    }
+
+    .kanan_utama{
+      display:flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
+      gap: 10px;
     }
 
-    .kotak-modal {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      width: 280px;
-      text-align: center;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    .gambar_utama{
+      width: min(520px, 100%);
+      height: 350px;             
+      border-radius: 12px;
+      border: 2px solid rgba(0,0,0,.25);
+      background: rgba(255,255,255,.55);
+      overflow: hidden;
     }
 
-    .kotak-modal h2 {
-      color: #4c6ef5;
-      margin-bottom: 10px;
+    .gambar_utama img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;          
+      object-position: center;   
+      display: block;
     }
 
-    .kotak-modal p {
-      color: #333;
-      font-size: 14px;
+    .teks_tagline{
+      font-weight: 700;
+      color:#fff;
+      text-shadow: 0 2px 8px rgba(0,0,0,.25);
+      font-size: 15px;
+      text-align:center;
     }
 
-    .kotak-modal button {
-      margin-top: 15px;
-      padding: 8px 16px;
-      background: #4c6ef5;
-      color: #ffffff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
 
-    .alert-error {
-      background: #ffe3e3;
-      color: #c92a2a;
-      border: 1px solid #faa2a2;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+  .menu-atas {
+    height: 56px;
+  }
 
-    @media screen and (max-width: 768px) {
-      .lupa-sandi {
-        margin-top: 20px;
-      }
-    }
+  .logo-navbar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .teks-selamat {
+    font-size: 14px;
+  }
+
+  .btn-login-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .btn-login-icon i {
+    font-size: 16px;
+  }
+
+  .pembungkus {
+    padding-top: 72px;
+  }
+
+  .isi_utama {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .gambar_utama {
+    width: min(520px, 100%);
+    aspect-ratio: 16/10;
+    height: auto;
+    border-radius: 12px;
+    border: 2px solid rgba(0,0,0,.25);
+    background: rgba(255,255,255,.75);
+    overflow: hidden;
+  }
+
+  .gambar_utama img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+  }
+
+  .tengah-menu-atas {
+    display: none; 
+  }
+
+  .kiri_utama h1 {
+    margin-top: 10px;
+  }
+  .teks_tagline{
+      font-size: 13px;
+  }
+
+}
+
   </style>
 </head>
 
 <body>
-  <div class="wadah">
-    <div class="kartu">
-      <img src="gambar/logo.jpg" alt="login" class="gambar" />
 
-      <?php if (!empty($error)): ?>
-        <div class="alert-error">
-          <i class="fa-solid fa-circle-exclamation"></i>
-          <span><?= htmlspecialchars($error) ?></span>
+  <!-- NAVBAR -->
+  <div class="menu-atas">
+    <div class="kiri-menu-atas">
+      <img src="gambar/mental.png" class="logo-navbar" alt="Logo 1">
+      <img src="gambar/love.png" class="logo-navbar" alt="Logo 2">
+    </div>
+
+    <div class="tengah-menu-atas">
+      <span class="teks-selamat">Sistem Pakar Diagnosa Gangguan Kesehatan Mental Pada Remaja</span>
+    </div>
+
+    <div class="kanan-menu-atas">
+      <a class="btn-login-icon" href="login.php" title="Login">
+        <i class="fa-solid fa-user"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- KONTEN -->
+  <div class="pembungkus">
+    <div class="bagian_utama">
+      <div class="isi_utama">
+        <div class="kiri_utama">
+          <h1>Sistem Pakar <br> Diagnosa Gangguan Kesehatan Mental Pada Remaja</h1>
+
+          <p>
+            Kesehatan mental sama pentingnya dengan kesehatan fisik.
+            Melalui website ini, kamu bisa memahami kesehatan mental dan melakukan tes sederhana
+            untuk mengenali kondisi kamu.
+          </p>
+
+        <a class="btn-mulai" href="pengguna/data_pengguna.php">Mulai Sekarang</a>
         </div>
-      <?php endif; ?>
 
-      <form action="" method="POST" class="formulir-masuk">
-        <label>
-          <i style="margin-right: 7px; font-size: 15px;" class="fa-solid fa-user"></i> Username
-        </label>
-        <input
-          type="text"
-          name="username"
-          placeholder="Masukkan username"
-          required
-          value="<?= htmlspecialchars($username) ?>" />
-
-        <label>
-          <i style="margin-right: 2px; font-size: 15px;" class="fa-solid fa-key"></i> Password
-        </label>
-        <div class="input-sandi">
-          <input type="password" id="sandi" name="password" placeholder="Masukkan password" required />
-          <i id="tombolLihatSandi" class="fa-solid fa-eye tombol-lihat-sandi"></i>
-        </div>
-
-        <div class="pilihan-peran">
-          <label><i class="fa-solid fa-user-gear" style="margin-right: 3px;"></i> Login sebagai:</label>
-          <div class="kelompok-radio">
-            <label>
-              <input type="radio" name="role" value="owner" required
-                <?= ($role_in === 'owner') ? 'checked' : ''; ?>> Owner
-            </label>
-            <label>
-              <input type="radio" name="role" value="admin" required
-                <?= ($role_in === 'admin') ? 'checked' : ''; ?>> Admin
-            </label>
-            <label>
-              <input type="radio" name="role" value="gudang" required
-                <?= ($role_in === 'gudang') ? 'checked' : ''; ?>> Gudang
-            </label>
-            <label>
-              <input type="radio" name="role" value="kasir" required
-                <?= ($role_in === 'kasir') ? 'checked' : ''; ?>> Kasir
-            </label>
+        <div class="kanan_utama">
+          <div class="gambar_utama">
+            <img src="gambar/gambarutama.png" alt="Logo 1">
           </div>
+          <div class="teks_tagline">Menjaga Pikiran Sehat, Hidup Lebih Bahagia</div>
         </div>
 
-        <button type="submit" class="tombol-masuk">Masuk</button>
-      </form>
-
-      <div class="lupa-sandi" id="lupaSandi">Lupa Sandi?</div>
+      </div>
     </div>
   </div>
 
-  <!-- Modal -->
-  <div class="lapisan-modal" id="lapisanModal">
-    <div class="kotak-modal">
-      <h2>Informasi</h2>
-      <p>Silakan hubungi admin untuk konfirmasi terkait masalah Anda.</p>
-      <button id="tutupModal">Tutup</button>
-    </div>
-  </div>
-
-  <script>
-    const tombolLihatSandi = document.getElementById("tombolLihatSandi");
-    const inputSandi = document.getElementById("sandi");
-    const lupaSandi = document.getElementById("lupaSandi");
-    const lapisanModal = document.getElementById("lapisanModal");
-    const tutupModal = document.getElementById("tutupModal");
-
-    if (tombolLihatSandi && inputSandi) {
-      tombolLihatSandi.addEventListener("click", () => {
-        inputSandi.type = inputSandi.type === "password" ? "text" : "password";
-        tombolLihatSandi.classList.toggle("fa-eye");
-        tombolLihatSandi.classList.toggle("fa-eye-slash");
-      });
-    }
-
-    if (lupaSandi)  lupaSandi.addEventListener("click", () => lapisanModal.style.display = "flex");
-    if (tutupModal) tutupModal.addEventListener("click", () => lapisanModal.style.display = "none");
-  </script>
 </body>
 </html>
