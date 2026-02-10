@@ -1,6 +1,6 @@
 <?php
 session_start();
-include __DIR__ . '/../koneksi/koneksi.php'; // ganti ke ../../koneksi/koneksi.php jika path kamu benar
+include __DIR__ . '/../koneksi/koneksi.php'; 
 
 function h($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 function clampIndex($i,$min,$max){ return max($min, min($max, $i)); }
@@ -101,28 +101,47 @@ if ($to > $totalPage) {
 <title>Diagnosa</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-body{background:#fff;}
+*{margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;}
 
-/* MENU ATAS */
+body{
+  background:#fff;}
+
 .menu-atas{
-  position:fixed;top:0;left:0;right:0;height:70px;
-  background:#fff;display:flex;align-items:center;
-  justify-content:space-between;padding:0 16px;
-  box-shadow:0 2px 8px rgba(0,0,0,.25);z-index:100;
+  position:fixed;
+  top:0;left:0;
+  right:0;
+  height:70px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 16px;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+  z-index:100;
 }
-.kiri-menu-atas{display:flex;gap:10px;}
-.logo-navbar{width:45px;height:45px;object-fit:cover;}
-.tengah-menu-atas{font-size:20px;font-weight:bold;color:#333;}
 
+.kiri-menu-atas{
+  display:flex;
+  gap:10px;}
 
-/* PEMBUNGKUS */
+.logo-navbar{
+  width:45px;
+  height:45px;
+  object-fit:cover;}
+
+.tengah-menu-atas{
+  font-size:20px;
+  font-weight:bold;
+  color:#333;}
+
 .pembungkus{
   padding-top: 70px;
   min-height: 100vh;
 }
 
-/* TEKS INSTRUKSI: TANPA BORDER */
 .instruksi{
   width: min(1060px, calc(100% - 40px));
   margin: 18px auto 14px;
@@ -134,8 +153,6 @@ body{background:#fff;}
   text-align: center;
 }
 
-
-/* AREA BACKGROUND 2 WARNA (50% - 50%) FULL LAYAR */
 .bagi-dua{
   position: relative;
   width:100%;
@@ -143,19 +160,16 @@ body{background:#fff;}
   display:flex;
 }
 
-/* kotak biru 50% */
 .latar-kiri{
   flex: 0 0 50%;
   background:#b3ebf2;
 }
 
-/* kotak merah 50% */
 .latar-kanan{
   flex: 0 0 50%;
   background: #f5a3a3;
 }
 
-/* kotak putih di tengah (menimpa biru & merah) */
 .kotak-pertanyaan{
   position:absolute;
   left:50%;
@@ -173,14 +187,16 @@ body{background:#fff;}
   justify-content:space-between;
 }
 
-/* untuk 5 pertanyaan: biar bisa scroll kalau kepanjangan */
 .isi-pertanyaan{
   overflow:auto;
   max-height: 440px;
   padding-right: 4px;
 }
 
-.judul-pertanyaan{font-weight:800;font-size:16px;margin-bottom:10px;}
+.judul-pertanyaan{
+  font-weight:800;
+  font-size:16px;
+  margin-bottom:10px;}
 
 .pilihan-radio{
   display:flex;
@@ -219,7 +235,10 @@ body{background:#fff;}
   gap:6px;
   align-items:center;
 }
-.baris-tombol{ display:flex; gap:10px; align-items:center; }
+.baris-tombol{ 
+  display:flex; 
+  gap:10px; 
+  align-items:center; }
 
 .tombol{
   border: 2px solid #777;
@@ -231,9 +250,14 @@ body{background:#fff;}
   font-size: 12px;
   box-shadow: 0 2px 0 rgba(0,0,0,.25);
 }
-.tombol:disabled{ opacity:.5; cursor:not-allowed; }
+.tombol:disabled{ 
+  opacity:.5; 
+  cursor:not-allowed; }
 
-.pembungkus-keluar{ display:flex; justify-content:center; margin-top: 8px; }
+.pembungkus-keluar{ 
+  display:flex; 
+  justify-content:center; 
+  margin-top: 8px; }
 .tombol-keluar{
   border: 2px solid #7a1d1d;
   background:#e85b5b;
@@ -248,45 +272,36 @@ body{background:#fff;}
   display:inline-block;
 }
 
-/* RESPONSIVE */
-
 @media(max-width:768px){
    .tengah-menu-atas{
     display:none;} 
 
-  /* background 2 warna tetap penuh sampai bawah */
   .bagi-dua{
     min-height: 100vh;
-    /* ruang bawah supaya nggak mepet */
   }
   .latar-kiri, .latar-kanan{
     min-height: 100vh;
   }
-
-  /* kotak putih tetap di tengah layar */
   .kotak-pertanyaan{
     position: absolute;
     left: 50%;
-    top: 20px;                  /* mulai dari atas */
-    transform: translateX(-50%); /* center horizontal */
+    top: 20px;                
+    transform: translateX(-50%); 
     width: min(820px, calc(100% - 48px));
     height: auto;
     min-height: auto;
   }
-
-  /* MATIKAN scroll dalam kotak putih */
   .isi-pertanyaan{
     overflow: visible;
     max-height: none;
   }
-/* perkecil judul pertanyaan */
+
   .judul-pertanyaan{
     font-size: 14px;
     font-weight: 700;
     line-height: 1.4;
   }
 
-  /* perkecil pilihan jawaban */
   .pilihan-radio{
     font-size: 12px;
     gap: 10px;
@@ -296,7 +311,6 @@ body{background:#fff;}
     gap: 4px;
   }
 
-  /* perkecil radio button */
   .pilihan-radio input{
     transform: scale(0.9);
   }
@@ -304,18 +318,17 @@ body{background:#fff;}
     font-size: 13px;
   }
 }
-
-
 </style>
 </head>
-
 <body>
   <div class="menu-atas">
     <div class="kiri-menu-atas">
       <img src="../gambar/mental.png" class="logo-navbar" alt="">
       <img src="../gambar/love.png" class="logo-navbar" alt="">
     </div>
-    <div class="tengah-menu-atas">Sistem Pakar Diagnosa Gangguan Kesehatan Mental Pada Remaja</div>
+    <div class="tengah-menu-atas">
+      Sistem Pakar Diagnosa Gangguan Kesehatan Mental Pada Remaja
+    </div>
     <div></div>
   </div>
 
@@ -328,7 +341,6 @@ body{background:#fff;}
     <div class="bingkai">
       <div class="bagi-dua">
         <div class="latar-kiri">
-
           <div class="kotak-pertanyaan">
             <div>
               <form method="post" action="pertanyaan.php?q=<?= (int)$page ?>">
@@ -343,9 +355,15 @@ body{background:#fff;}
                     $nomor = $startIndex + $i + 1;
                   ?>
                     <div style="margin-bottom:14px;">
-                      <div class="judul-pertanyaan"><?= $nomor ?>. <?= h($g['nama_gejala']) ?></div>
+                      <div class="judul-pertanyaan">
+                        <?= $nomor ?>. <?= h($g['nama_gejala']) ?>
+                      </div>
 
-                      <input type="hidden" name="id_gejala[]" value="<?= $idGejalaNow ?>" />
+                      <input
+                        type="hidden"
+                        name="id_gejala[]"
+                        value="<?= $idGejalaNow ?>"
+                      />
 
                       <div class="pilihan-radio">
                         <?php foreach ($cfChoices as $k => $opt): ?>
@@ -373,42 +391,49 @@ body{background:#fff;}
                       <span>&gt;</span>
                     </div>
 
- <div class="baris-tombol">
+                    <div class="baris-tombol">
+                      <!-- TOMBOL RESET -->
+                      <a
+                        href="pertanyaan.php?action=reset"
+                        class="tombol"
+                        onclick="return confirm('Yakin ingin mereset semua jawaban?');"
+                        style="text-decoration:none; display:inline-block;"
+                      >
+                        Reset
+                      </a>
 
-  <!-- TOMBOL RESET (PALING KIRI) -->
-  <a
-    href="pertanyaan.php?action=reset"
-    class="tombol"
-    onclick="return confirm('Yakin ingin mereset semua jawaban?');"
-    style="text-decoration:none; display:inline-block;"
-  >
-    Reset 
-  </a>
+                      <!-- TOMBOL SEBELUMNYA -->
+                      <button
+                        class="tombol"
+                        type="submit"
+                        name="nav"
+                        value="prev"
+                        <?= ($page <= 1) ? 'disabled' : ''; ?>
+                      >
+                        Sebelumnya
+                      </button>
 
-  <!-- TOMBOL SEBELUMNYA -->
-  <button class="tombol" type="submit" name="nav" value="prev" <?= ($page<=1)?'disabled':''; ?>>
-    Sebelumnya
-  </button>
-
-  <!-- TOMBOL SELANJUTNYA / LIHAT HASIL -->
-  <button class="tombol" type="submit" name="nav" value="next">
-    <?= ($page < $totalPage) ? "Selanjutnya" : "Lihat Hasil" ?>
-  </button>
-
-</div>
-
-
+                      <!-- TOMBOL SELANJUTNYA / LIHAT HASIL -->
+                      <button
+                        class="tombol"
+                        type="submit"
+                        name="nav"
+                        value="next"
+                      >
+                        <?= ($page < $totalPage) ? "Selanjutnya" : "Lihat Hasil" ?>
+                      </button>
+                    </div>
 
                     <div class="pembungkus-keluar">
-                      <a class="tombol-keluar" href="../index.php?action=reset">Keluar</a>
+                      <a class="tombol-keluar" href="../index.php?action=reset">
+                        Keluar
+                      </a>
                     </div>
                   </div>
                 </div>
-
               </form>
             </div>
           </div>
-
         </div>
 
         <div class="latar-kanan"></div>
@@ -416,4 +441,5 @@ body{background:#fff;}
     </div>
   </div>
 </body>
+
 </html>

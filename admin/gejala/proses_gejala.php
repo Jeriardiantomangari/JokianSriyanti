@@ -18,7 +18,7 @@ if ($aksi == 'hapus') {
 
 // Tambah / Update
 $id = $_POST['id'] ?? '';
-$kode = $_POST['kode_gejala'];  // Capture the kode_gejala field
+$kode = $_POST['kode_gejala'];  
 $nama = $_POST['nama_gejala'];
 
 if ($id == "") {

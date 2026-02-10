@@ -12,7 +12,6 @@ include '../../koneksi/koneksi.php';
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
 <style>
-/* === STYLE SAMA PERSIS DENGAN ACUAN, hanya rename class tabel === */
 .konten-utama {
   margin-left:250px;
   margin-top:60px;
@@ -364,7 +363,7 @@ $(document).ready(function () {
     "pageLength": 10,
     "lengthMenu": [5, 10, 25, 50],
     "columnDefs": [{
-      "orderable": false, "targets": 6 // kolom aksi
+      "orderable": false, "targets": 6 
     }],
     "language": {
       "emptyTable": "Tidak ada data tersedia",
@@ -407,7 +406,7 @@ function tambahAturan(){
   $('#id_aturan').val('');
   $('#judulModal').text('Tambah Aturan');
   $('#modalAturan').css('display','flex');
-  hitungBobot(); // <-- supaya bobot langsung terisi 0.00
+  hitungBobot(); 
 }
 
 // Edit
@@ -415,7 +414,7 @@ function editAturan(id){
   $.ajax({
     url: 'proses_aturan.php',
     type: 'POST',
-    dataType: 'json', // <-- penting
+    dataType: 'json', 
     data: { aksi:'ambil', id:id },
     success: function(obj){
       $('#judulModal').text('Edit Aturan');
@@ -452,7 +451,7 @@ function tutupModal(){ $('#modalAturan').hide(); }
 // Simpan (Tambah / Edit)
 $('#formAturan').submit(function(e){
   e.preventDefault();
-  hitungBobot(); // <-- pastikan bobot terbaru ikut terkirim
+  hitungBobot(); 
   $.post('proses_aturan.php', $(this).serialize(), function(res){
     $('#modalAturan').hide();
     alert('Data berhasil disimpan');
@@ -466,8 +465,6 @@ $('.tombol-cetak').click(function(){
   const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
   doc.setFontSize(14);
   doc.text("Data Aturan", 105, 15, {align:"center"});
-
-  // ambil header, kecuali kolom Aksi (index 6)
   let headers = [];
   $('#tabel-aturan thead th').each(function(index){
     if(index !== 6) headers.push($(this).text());

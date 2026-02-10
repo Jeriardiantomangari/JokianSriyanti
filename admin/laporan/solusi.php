@@ -18,7 +18,6 @@ if ($idGangguan <= 0) {
 /* validasi kategori biar aman */
 $kategoriValid = ['Ringan','Sedang','Berat'];
 if (!in_array($kategori, $kategoriValid, true)) {
-  // kalau kategori tidak dikirim / tidak valid, kita tampilkan semua solusi gangguan tsb
   $kategori = '';
 }
 

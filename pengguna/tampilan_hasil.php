@@ -5,14 +5,6 @@ if (!function_exists('h')) {
   }
 }
 
-/*
-  Variabel yang harus ada dari proses diagnosa:
-  - $userData (nama_pengguna, jenis_kelamin, usia, alamat)
-  - $hasil (array hasil gangguan)
-  - $top (nama, persen)
-  - $pie (angka persen untuk pie)
-  - $tanggal (string)
-*/
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -22,28 +14,44 @@ if (!function_exists('h')) {
   <title>Hasil Diagnosa</title>
 
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-    body{background:#fff;}
+    *{margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Segoe UI',sans-serif;}
 
-    /* MENU ATAS */
+    body{
+      background:#fff;}
     .menu-atas{
-      position:fixed;top:0;left:0;right:0;height:70px;
-      background:#fff;display:flex;align-items:center;
-      justify-content:space-between;padding:0 16px;
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      height:70px;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 16px;
       box-shadow:0 2px 8px rgba(0,0,0,.25);
       z-index:9999;
     }
-    .kiri-menu-atas{display:flex;gap:10px;}
-    .logo-navbar{width:45px;height:45px;object-fit:cover;}
-    .tengah-menu-atas{font-size:20px;font-weight:bold;color:#333;}
+    .kiri-menu-atas{
+      display:flex;
+      gap:10px;}
+    .logo-navbar{
+      width:45px;
+      height:45px;
+      object-fit:cover;}
+    .tengah-menu-atas{
+      font-size:20px;
+      font-weight:bold;
+      color:#333;}
 
-    /* PEMBUNGKUS */
     .pembungkus-halaman{
       padding-top:70px;
       min-height:100vh;
     }
 
-    /* LATAR 2 WARNA */
     .area-dua-warna{
       position:relative;
       width:100%;
@@ -53,7 +61,6 @@ if (!function_exists('h')) {
     .latar-biru{flex:0 0 50%; background:#b3ebf2;}
     .latar-merah{flex:0 0 50%; background:#f5a3a3;}
 
-    /* KOTAK PUTIH POLOS */
     .kotak-hasil{
       position:absolute;
       left:50%;
@@ -83,7 +90,9 @@ if (!function_exists('h')) {
       align-items:center;
       margin-bottom:10px;
     }
-    .label-data{font-weight:800;font-size:13px;}
+    .label-data{
+      font-weight:800;
+      font-size:13px;}
     .isi-data{
       background:#fff;
       border:2px solid #aaa;
@@ -92,16 +101,27 @@ if (!function_exists('h')) {
       font-weight:700;
       font-size:13px;
     }
-
-    .bagian-tengah{padding:14px;background:#fff;}
-
-    /* (Opsional) kalau kamu mau hilangkan baris judul hasil, set display:none */
+    .bagian-tengah{
+      padding:14px;
+      background:#fff;}
     .kepala-hasil{
-      display:flex;align-items:center;gap:10px;
-      margin-bottom:10px;font-weight:900;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+      font-weight:900;
     }
-    .lencana{display:inline-flex;align-items:center;gap:8px;font-weight:900;}
-    .titik{width:14px;height:14px;border:2px solid #111;border-radius:50%;display:inline-block;}
+    .lencana{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-weight:900;}
+    .titik{
+      width:14px;
+      height:14px;
+      border:2px solid #111;
+      border-radius:50%;
+      display:inline-block;}
 
     .grid-tengah{
       display:grid;
@@ -110,24 +130,47 @@ if (!function_exists('h')) {
       align-items:start;
     }
 
-    table{width:100%;border-collapse:collapse;font-size:12px;}
-    th, td{border:2px solid #111;padding:6px 8px;text-align:left;}
-    th{background:#fff;font-weight:900;}
-    td.tengah{text-align:center;}
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:12px;}
+    th, td{
+      border:2px solid #111;
+      padding:6px 8px;
+      text-align:left;}
+    th{
+      background:#fff;
+      font-weight:900;}
+    td.tengah{
+      text-align:center;}
 
     .tombol-solusi{
-      display:inline-flex;align-items:center;justify-content:center;
-      width:28px;height:28px;border:2px solid #111;border-radius:8px;
-      text-decoration:none;color:#111;font-weight:900;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:28px;
+      height:28px;
+      border:2px solid #111;
+      border-radius:8px;
+      text-decoration:none;
+      color:#111;
+      font-weight:900;
       background:#fff;
       cursor:pointer;
     }
 
-    .sisi-kanan{display:flex;flex-direction:column;gap:10px;}
+    .sisi-kanan{
+      display:flex;
+      flex-direction:column;
+      gap:10px;}
     .diagram-pie{
-      width:180px;height:180px;border:2px solid #111;border-radius:50%;
+      width:180px;
+      height:180px;
+      border:2px solid #111;
+      border-radius:50%;
       background: conic-gradient(#b3ebf2 <?= (float)$pie ?>%, #fff 0);
-      margin-left:auto;margin-right:auto;
+      margin-left:auto;
+      margin-right:auto;
     }
     .catatan{
       border:2px solid #111;
@@ -159,7 +202,6 @@ if (!function_exists('h')) {
       font-size:12px;
     }
 
-    /* MODAL SOLUSI */
     .modal{
       position:fixed;
       inset:0;
@@ -212,12 +254,8 @@ if (!function_exists('h')) {
 
     @media(max-width:768px){
       .tengah-menu-atas{display:none;}
-
-      /* HILANGKAN LATAR */
       .latar-biru,
       .latar-merah{display:none;}
-
-      /* KOTAK HASIL */
       .kotak-hasil{
         top:16px;
         transform:translateX(-50%);
@@ -229,7 +267,6 @@ if (!function_exists('h')) {
       .grid-tengah{grid-template-columns:1fr;}
       .baris-data{grid-template-columns:1fr;}
 
-      /* TABEL JADI CARD */
       table, thead, tbody, th, td, tr{
         display:block;
         width:100%;
@@ -320,8 +357,6 @@ if (!function_exists('h')) {
                   <?php foreach ($hasil as $rowH): ?>
                     <tr>
                       <td data-label="Gangguan"><?= h((string)$rowH['nama']) ?></td>
-
-                      <!-- TIDAK DIBULATKAN (hanya formatting) -->
                       <td data-label="Nilai CF"><?= h(number_format((float)$rowH['cf'], 6, '.', '')) ?></td>
                       <td data-label="Presentase"><?= h(number_format((float)$rowH['persen'], 2, '.', '')) ?>%</td>
 

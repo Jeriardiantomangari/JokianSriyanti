@@ -406,7 +406,7 @@ function tutupModal(){ $('#modalSolusi').hide(); }
 $('#formSolusi').submit(function(e){
   e.preventDefault();
 
-  let payload = $(this).serialize(); // sudah ada aksi=simpan & mode
+  let payload = $(this).serialize(); 
   $.post('proses_solusi.php', payload, function(res){
     let obj;
     try { obj = JSON.parse(res); } catch(e){ obj = {ok:false, msg:res}; }

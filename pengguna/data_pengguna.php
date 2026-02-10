@@ -54,7 +54,6 @@ if (!empty($_SESSION['id_pengguna'])) {
       $data = mysqli_fetch_assoc($res);
       $saved = true;
     } else {
-      // Session ada tapi data tidak ada di DB → bersihkan session biar tombol tidak “nyangkut”
       unset($_SESSION['id_pengguna']);
       $saved = false;
     }
@@ -90,7 +89,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && ($_POST["aksi"] ?? "") === "simpan"
         mysqli_stmt_bind_param($stmt, "sssis", $id, $nama, $jk, $usia, $alamat);
 
         if (mysqli_stmt_execute($stmt)) {
-          // kalau koneksi pakai autocommit OFF, ini yang bikin data benar-benar masuk
           @mysqli_commit($conn);
 
           $_SESSION['id_pengguna'] = $id;

@@ -14,12 +14,6 @@ if ($id <= 0) {
   exit;
 }
 
-/*
-  Dengan FK yang kamu punya:
-  - detail_konsultasi ON DELETE CASCADE ke konsultasi
-  - cf_gangguan ON DELETE CASCADE ke konsultasi
-  Jadi cukup delete dari konsultasi.
-*/
 $stmt = mysqli_prepare($conn, "DELETE FROM konsultasi WHERE id_konsultasi = ?");
 if(!$stmt){
   echo json_encode(['status'=>'error','message'=>'Prepare gagal: '.mysqli_error($conn)]);

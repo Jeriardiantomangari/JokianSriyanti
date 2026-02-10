@@ -16,8 +16,6 @@ $idp = mysqli_real_escape_string($conn, (string)$_SESSION['id_pengguna']);
    ========================= */
 if (isset($_GET['hapus'])) {
   $id_konsultasi = (int)$_GET['hapus'];
-
-  // Hapus tabel anak (aman walau FK tidak cascade)
   mysqli_query($conn, "DELETE FROM detail_konsultasi WHERE id_konsultasi = $id_konsultasi");
   mysqli_query($conn, "DELETE FROM cf_gangguan      WHERE id_konsultasi = $id_konsultasi");
 
@@ -61,25 +59,42 @@ if ($q) {
   <title>Riwayat Diagnosa</title>
 
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-    body{background:#fff;}
-
-    /* MENU ATAS */
+    *{margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Segoe UI',sans-serif;}
+    body{
+      background:#fff;}
     .menu-atas{
-      position:fixed;top:0;left:0;right:0;height:70px;
-      background:#fff;display:flex;align-items:center;
-      justify-content:space-between;padding:0 16px;
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      height:70px;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 16px;
       box-shadow:0 2px 8px rgba(0,0,0,.25);
       z-index:9999;
     }
-    .kiri-menu-atas{display:flex;gap:10px;}
-    .logo-navbar{width:45px;height:45px;object-fit:cover;}
-    .tengah-menu-atas{font-size:20px;font-weight:900;color:#333;}
+    .kiri-menu-atas{
+      display:flex;
+      gap:10px;}
+    .logo-navbar{
+      width:45px;
+      height:45px;
+      object-fit:cover;}
+    .tengah-menu-atas{
+      font-size:20px;
+      font-weight:900;
+      color:#333;}
 
-    /* PEMBUNGKUS */
-    .pembungkus-halaman{padding-top:70px;min-height:100vh;}
+    .pembungkus-halaman{
+      padding-top:70px;
+      min-height:100vh;}
 
-    /* LATAR 2 WARNA */
     .area-dua-warna{
       position:relative;
       width:100%;
@@ -88,8 +103,6 @@ if ($q) {
     }
     .latar-biru{flex:1;background:#b3ebf2;}
     .latar-merah{flex:1;background:#f5a3a3;}
-
-    /* KOTAK PUTIH */
     .kotak{
       position:absolute;
       left:50%;
@@ -100,22 +113,23 @@ if ($q) {
       background:#fff;
     }
 
-    /* JUDUL (GARIS BAWAH DIHAPUS) */
     .atas{
       padding:14px;
-      /* border-bottom:2px solid #111;  <-- DIHAPUS sesuai permintaan */
       font-weight:900;
     }
 
     .tengah{padding:14px;}
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:12px;}
 
-    /* TABEL DESKTOP */
-    table{width:100%;border-collapse:collapse;font-size:12px;}
-    th, td{border:2px solid #111;padding:8px;text-align:left;}
-    th{background:#fff;font-weight:900;}
+    th, td{border:2px solid #111;
+      padding:8px;
+      text-align:left;}
+    th{background:#fff;
+      font-weight:900;}
     td.center{text-align:center;}
-
-    /* TOMBOL AKSI */
     .btn-aksi{
       display:inline-flex;
       align-items:center;
@@ -134,9 +148,7 @@ if ($q) {
       white-space:nowrap;
     }
 
-    /* BAGIAN BAWAH (GARIS ATAS DIHAPUS) */
     .bawah{
-      /* border-top:2px solid #111; <-- DIHAPUS sesuai permintaan */
       padding:10px 14px;
       display:flex;
       gap:10px;
@@ -156,12 +168,11 @@ if ($q) {
       font-size:12px;
     }
 
-    /* =========================
-       RESPONSIVE MOBILE: TABEL JADI CARD
-       ========================= */
     @media(max-width:768px){
-      .tengah-menu-atas{display:none;}
-      .latar-biru,.latar-merah{display:none;}
+      .tengah-menu-atas{
+        display:none;}
+      .latar-biru,.latar-merah{
+        display:none;}
 
       .kotak{
         position:static;
@@ -200,7 +211,6 @@ if ($q) {
         flex:0 0 120px;
       }
 
-      /* BARIS AKSI: label kiri, tombol rata kanan */
       td[data-label="Aksi"]{
         display:flex;
         justify-content:space-between;

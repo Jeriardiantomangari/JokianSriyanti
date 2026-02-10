@@ -54,7 +54,6 @@ if ($nilai_mb > 1) $nilai_mb = 1;
 if ($nilai_md < 0) $nilai_md = 0;
 if ($nilai_md > 1) $nilai_md = 1;
 
-// (opsional) jika mau bobot tidak negatif:
 // if ($bobot < 0) $bobot = 0;
 
 if ($id_aturan === '') {

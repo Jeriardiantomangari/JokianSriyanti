@@ -110,8 +110,6 @@ while($g = mysqli_fetch_assoc($rGejala)){
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
     body{background:#fff;}
-
-    /* mengikuti layout admin kamu (sidebar: margin-left 250, topbar: 60) */
     .konten-utama{
       margin-left:250px;
       margin-top:60px;
@@ -119,8 +117,6 @@ while($g = mysqli_fetch_assoc($rGejala)){
       min-height:calc(100vh - 60px);
       background:#ffffff;
     }
-
-    /* ====== KOTAK ACUAN ====== */
     .kotak-hasil{
       width:min(980px, 100%);
       border:2px solid #111;
@@ -180,8 +176,6 @@ while($g = mysqli_fetch_assoc($rGejala)){
       background:#fff;
       cursor:pointer;
     }
-
-    /* blok gejala */
     .blok-gejala{
       margin-top:14px;
       border-top:2px solid #111;
@@ -195,8 +189,6 @@ while($g = mysqli_fetch_assoc($rGejala)){
       gap:10px;
       flex-wrap:wrap;
     }
-
-    /* tombol bawah */
     .bagian-bawah{
       padding:10px 14px;
       display:flex;
@@ -218,8 +210,6 @@ while($g = mysqli_fetch_assoc($rGejala)){
       font-size:12px;
       cursor:pointer;
     }
-
-    /* MODAL SOLUSI */
     .modal{
       position:fixed;
       inset:0;
@@ -262,7 +252,6 @@ while($g = mysqli_fetch_assoc($rGejala)){
       background:#fff;
     }
 
-    /* responsive tabel jadi card */
     @media(max-width:768px){
       .konten-utama{ margin-left:0; margin-top:60px; padding:14px; }
       .grid-data{grid-template-columns:1fr;}
@@ -496,7 +485,7 @@ while($g = mysqli_fetch_assoc($rGejala)){
 
     document.querySelectorAll('#tabel-hasil tbody tr').forEach(tr => {
       const tds = tr.querySelectorAll('td');
-      if (tds.length < 4) return; // baris kosong/colspan
+      if (tds.length < 4) return; 
 
       const namaG = tds[0].innerText.trim();
       const cf    = tds[1].innerText.trim();

@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
 
         if ($res && $u = mysqli_fetch_assoc($res)) {
 
-            // PASSWORD PLAIN TEXT (SAMA DENGAN DI DB)
+            // PASSWORD 
             $password_match = ($password === $u['password']); 
 
             if ($password_match) {
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
                 $_SESSION['id']       = $u['id'];
                 $_SESSION['nama']     = $u['nama'];
                 $_SESSION['username'] = $u['username'];
-                $_SESSION['foto']     = $u['foto']; // <-- ini sekarang ada isinya
+                $_SESSION['foto']     = $u['foto']; 
 
                 header("Location: admin/gangguan/gangguan.php");
                 exit;
@@ -56,17 +56,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <style>
-    * { box-sizing: border-box; font-family: Inter, system-ui, Arial; }
-    body { margin: 0; background-size: cover; }
-    .wadah { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-    .kartu { background: #fff; width: 400px; padding: 24px; border-radius: 14px; color: #000; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); }
-    .gambar { width: 40%; max-width: 250px; margin: 0 auto 20px; display: block; }
-    .formulir-masuk label { display: block; margin-top: 8px; font-size: 14px; }
-    .formulir-masuk input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid black; margin-top: 6px; }
-    .input-sandi { position: relative; }
-    .tombol-lihat-sandi { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; }
-    .tombol-masuk { width: 100%; padding: 10px; border-radius: 6px; border: none; margin-top: 50px; background: #fff; color: blue; border: 1px solid black; cursor: pointer; font-weight: 700; }
-    .alert-error { background: #ffe3e3; color: #c92a2a; border: 1px solid #faa2a2; padding: 10px; border-radius: 8px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    * { box-sizing: border-box; 
+      font-family: Inter, system-ui, Arial; }
+
+    body { 
+      margin: 0; 
+      background-size: cover; }
+
+    .wadah { 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; }
+
+    .kartu { 
+      background: #fff; 
+      width: 400px; 
+      padding: 24px; 
+      border-radius: 14px; 
+      color: #000; 
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); }
+
+    .gambar { 
+      width: 40%; 
+      max-width: 250px; 
+      margin: 0 auto 20px; 
+      display: block; }
+
+    .formulir-masuk label { 
+      display: block; 
+      margin-top: 8px; 
+      font-size: 14px; }
+
+    .formulir-masuk input { 
+      width: 100%; 
+      padding: 10px; 
+      border-radius: 8px; 
+      border: 1px solid black; 
+      margin-top: 6px; }
+
+    .input-sandi { 
+      position: relative; }
+
+    .tombol-lihat-sandi { 
+      position: absolute; 
+      right: 12px; 
+      top: 50%; 
+      transform: translateY(-50%); 
+      cursor: pointer; }
+
+    .tombol-masuk { 
+      width: 100%; 
+      padding: 10px; 
+      border-radius: 6px; 
+      border: none; 
+      margin-top: 50px; 
+      background: #fff; 
+      color: blue; 
+      border: 1px solid black; 
+      cursor: pointer; 
+      font-weight: 700; }
+
+    .alert-error { 
+      background: #ffe3e3; 
+      color: #c92a2a; 
+      border: 1px solid #faa2a2; 
+      padding: 10px; 
+      border-radius: 8px; 
+      margin-bottom: 12px; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; }
   </style>
 </head>
 

@@ -19,7 +19,7 @@ $qTerbaru = mysqli_query($conn, "
   LIMIT 5
 ");
 
-// Top 7 gangguan
+// Top gangguan sering muncul atau banyak dialami
 $qTop7 = mysqli_query($conn, "
   SELECT j.id_gangguan, j.nama_gangguan, COUNT(k.id_konsultasi) AS jumlah
   FROM jenis_gangguan j
@@ -40,11 +40,10 @@ while($row = mysqli_fetch_assoc($qTop7)){
   $dataTop7[] = $row;
 }
 ?>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-/* ======= Ikuti gaya acuan kamu ======= */
+
 .konten-utama{
   margin-left:250px;
   margin-top:60px;
@@ -62,7 +61,6 @@ while($row = mysqli_fetch_assoc($qTop7)){
   font-size:22px;
 }
 
-/* Kartu ringkasan */
 .grid-kartu{
   display:grid;
   grid-template-columns: repeat(4, 1fr);
@@ -88,7 +86,6 @@ while($row = mysqli_fetch_assoc($qTop7)){
   color:#111;
 }
 
-/* Kotak konten */
 .kotak{
   background:white;
   border-radius:12px;
@@ -106,7 +103,6 @@ while($row = mysqli_fetch_assoc($qTop7)){
   padding:14px;
 }
 
-/* Layout chart + tabel top7 */
 .grid-dua-kolom{
   display:grid;
   grid-template-columns: 1.4fr 1fr;
@@ -119,7 +115,7 @@ while($row = mysqli_fetch_assoc($qTop7)){
   border-radius:12px;
   border:1px solid #e0e0e0;
   padding:12px;
-  min-width: 520px; /* bantu supaya saat layar kecil bisa scroll */
+  min-width: 520px;
 }
 
 .bingkai-tabel{
@@ -127,20 +123,18 @@ while($row = mysqli_fetch_assoc($qTop7)){
   border-radius:12px;
   border:1px solid #e0e0e0;
   overflow:hidden;
-  min-width: 380px; /* bantu supaya saat layar kecil bisa scroll */
+  min-width: 380px; 
 }
 
-/* ===== Scroll horizontal untuk kotak gangguan ===== */
 .scroll-horizontal{
   overflow-x:auto;
   -webkit-overflow-scrolling:touch;
   padding-bottom:8px;
 }
 .isi-scroll{
-  min-width: 950px; /* lebar minimal konten dalam kotak agar bisa geser kiri-kanan */
+  min-width: 950px;
 }
 
-/* scrollbar (opsional, biar rapi) */
 .scroll-horizontal::-webkit-scrollbar{ height:8px; }
 .scroll-horizontal::-webkit-scrollbar-thumb{
   background:#cfcfcf;
@@ -151,7 +145,6 @@ while($row = mysqli_fetch_assoc($qTop7)){
   border-radius:10px;
 }
 
-/* Tabel (gaya simpel, konsisten) */
 .tabel-dashboard{
   width:100%;
   border-collapse:collapse;
@@ -177,7 +170,6 @@ while($row = mysqli_fetch_assoc($qTop7)){
   font-style:italic;
 }
 
-/* Badge kategori */
 .badge{
   padding:4px 10px;
   border-radius:999px;
@@ -190,19 +182,15 @@ while($row = mysqli_fetch_assoc($qTop7)){
 .badge.sedang{ background:#FFEE93; }
 .badge.berat{  background:#fcb6d0; }
 
-/* ======= Responsif HP (<= 768px) ======= */
-@media screen and (max-width: 768px){
 
-  /* layout dasar */
+@media screen and (max-width: 768px){
   .konten-utama{
     margin-left:0;
     padding:20px;
     width:100%;
     background:#ffffff;
-    text-align:left; /* ⬅️ jangan center semua */
+    text-align:left; 
   }
-
-  /* yang boleh center hanya judul & kartu */
   .judul-halaman,
   .grid-kartu{
     text-align:center;
@@ -212,15 +200,11 @@ while($row = mysqli_fetch_assoc($qTop7)){
     grid-template-columns: repeat(2, 1fr);
     gap:12px;
   }
-
-  /* ===== Top 7: tetap tabel normal & rata kiri ===== */
   .bingkai-tabel table,
   .bingkai-tabel th,
   .bingkai-tabel td{
     text-align:left !important;
   }
-
-  /* ===== Konsultasi Terbaru: jadi tampilan kartu ===== */
   .tabel-konsultasi,
   .tabel-konsultasi thead,
   .tabel-konsultasi tbody,
