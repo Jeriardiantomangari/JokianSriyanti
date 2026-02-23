@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
                 $_SESSION['username'] = $u['username'];
                 $_SESSION['foto']     = $u['foto']; 
 
-                header("Location: admin/gangguan/gangguan.php");
+                header("Location: admin/halaman_utama/halaman_utama.php");
                 exit;
             } else {
                 $error = 'Password salah!';
