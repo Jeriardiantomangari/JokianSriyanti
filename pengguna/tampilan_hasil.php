@@ -202,6 +202,29 @@ if (!function_exists('h')) {
       font-size:12px;
     }
 
+    /* tombol detail (gantikan icon) */
+.tombol-solusi{
+  width:auto;
+  height:auto;
+  padding:6px 10px;
+  border-radius:10px;
+  font-size:12px;
+  font-weight:900;
+}
+
+/* highlight untuk ranking tertinggi */
+tr.rank-1{
+  background:#b3ebf2;            /* biru muda */
+}
+tr.rank-1 td{
+  border-color:#0b3d91;          /* garis lebih tegas */
+}
+tr.rank-1 td:first-child{
+  font-weight:900;
+}
+
+
+
     .modal{
       position:fixed;
       inset:0;
@@ -353,26 +376,36 @@ if (!function_exists('h')) {
                     <th style="width:70px;" class="tengah">Solusi</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <?php foreach ($hasil as $rowH): ?>
-                    <tr>
-                      <td data-label="Gangguan"><?= h((string)$rowH['nama']) ?></td>
-                      <td data-label="Nilai CF"><?= h(number_format((float)$rowH['cf'], 6, '.', '')) ?></td>
-                      <td data-label="Presentase"><?= h(number_format((float)$rowH['persen'], 2, '.', '')) ?>%</td>
+              <tbody>
+  <?php
+    $topId = isset($top['id_gangguan']) ? (int)$top['id_gangguan'] : null;
+  ?>
+  <?php foreach ($hasil as $rowH): ?>
+    <?php
+      $rowId = (int)$rowH['id_gangguan'];
+      $isTop = ($topId !== null && $rowId === $topId);
+    ?>
+    <tr class="<?= $isTop ? 'rank-1' : '' ?>">
+      <td data-label="Gangguan">
+        <?= h((string)$rowH['nama']) ?>
+      </td>
 
-                      <td data-label="Kategori"><?= h((string)$rowH['keparahan']) ?></td>
-                      <td data-label="Solusi" class="tengah">
-                        <button
-                          type="button"
-                          class="tombol-solusi"
-                          data-id="<?= (int)$rowH['id_gangguan'] ?>"
-                          data-kategori="<?= h((string)$rowH['keparahan']) ?>"
-                          title="Lihat Solusi"
-                        >✎</button>
-                      </td>
-                    </tr>
-                  <?php endforeach; ?>
-                </tbody>
+      <td data-label="Nilai CF"><?= h(number_format((float)$rowH['cf'], 6, '.', '')) ?></td>
+      <td data-label="Presentase"><?= h(number_format((float)$rowH['persen'], 2, '.', '')) ?>%</td>
+      <td data-label="Kategori"><?= h((string)$rowH['keparahan']) ?></td>
+
+      <td data-label="Solusi" class="tengah">
+        <button
+          type="button"
+          class="tombol-solusi"
+          data-id="<?= $rowId ?>"
+          data-kategori="<?= h((string)$rowH['keparahan']) ?>"
+          title="Lihat Detail Solusi"
+        >DETAIL</button>
+      </td>
+    </tr>
+  <?php endforeach; ?>
+</tbody>
               </table>
             </div>
 

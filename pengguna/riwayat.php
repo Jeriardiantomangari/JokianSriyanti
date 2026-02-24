@@ -293,9 +293,10 @@ if ($q) {
         </div>
 
         <div class="bawah">
-         <a class="btn" href="pertanyaan.php">MULAI TES</a>
-          <a class="btn" href="../index.php">KELUAR</a>
-        </div>
+  <button class="btn" onclick="history.back()">KEMBALI</button>
+  <a class="btn" href="pertanyaan.php">MULAI TES</a>
+  <a class="btn" href="../index.php">KELUAR</a>
+</div>
 
       </div>
     </div>
