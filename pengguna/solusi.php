@@ -74,23 +74,46 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Solusi</title>
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
-    body{background:#fff;padding:16px;}
+    *{margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Segoe UI',sans-serif;}
+    body{
+      background:#fff;
+      padding:16px;}
     .kotak{
-      max-width:780px;margin:0 auto;
-      border:2px solid #111;background:#fff;
-      padding:14px;border-radius:12px;
+      max-width:780px;
+      margin:0 auto;
+      border:2px solid #111;
+      background:#fff;
+      padding:14px;
+      border-radius:12px;
     }
-    .judul{font-weight:900;font-size:16px;margin-bottom:8px;}
-    .sub{font-weight:800;font-size:13px;margin-bottom:10px;}
-    .isi{font-size:13px;line-height:1.6;}
-    .isi ol{padding-left:18px;}
-    .isi li{margin-bottom:6px;}
+    .judul{
+      font-weight:900;
+      font-size:16px;
+      margin-bottom:8px;}
+    .sub{
+      font-weight:800;
+      font-size:13px;
+      margin-bottom:10px;}
+    .isi{
+      font-size:13px;
+      line-height:1.6;}
+    .isi ol{
+      padding-left:18px;}
+    .isi li{
+      margin-bottom:6px;}
     .kembali{
-      display:inline-block;margin-top:12px;
-      padding:8px 14px;border:2px solid #111;
-      border-radius:10px;text-decoration:none;
-      color:#111;font-weight:900;background:#fff;
+      display:inline-block;
+      margin-top:12px;
+      padding:8px 14px;
+      border:2px solid #111;
+      border-radius:10px;
+      text-decoration:none;
+      color:#111;
+      font-weight:900;
+      background:#fff;
     }
   </style>
 </head>

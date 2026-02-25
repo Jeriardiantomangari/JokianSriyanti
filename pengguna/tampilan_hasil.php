@@ -201,27 +201,24 @@ if (!function_exists('h')) {
       box-shadow:0 2px 0 rgba(0,0,0,.25);
       font-size:12px;
     }
+    .tombol-solusi{
+    width:auto;
+    height:auto;
+    padding:6px 10px;
+    border-radius:10px;
+    font-size:12px;
+    font-weight:900;
+    }
 
-    /* tombol detail (gantikan icon) */
-.tombol-solusi{
-  width:auto;
-  height:auto;
-  padding:6px 10px;
-  border-radius:10px;
-  font-size:12px;
-  font-weight:900;
-}
-
-/* highlight untuk ranking tertinggi */
-tr.rank-1{
-  background:#b3ebf2;            /* biru muda */
-}
-tr.rank-1 td{
-  border-color:#0b3d91;          /* garis lebih tegas */
-}
-tr.rank-1 td:first-child{
-  font-weight:900;
-}
+    tr.rank-1{
+    background:#b3ebf2;            
+    }
+    tr.rank-1 td{
+    border-color:#0b3d91;        
+    }
+    tr.rank-1 td:first-child{
+    font-weight:900;
+    }
 
 
 
